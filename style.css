@@ -717,7 +717,7 @@ footer a:hover {
 }
 
 #widget-section .form-btn {
-  background: linear-gradient(135deg, #162239, #162239);
+  background: #162239;
   color: white;
   border: none;
   font-size: 18px;

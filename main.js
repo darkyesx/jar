@@ -52,4 +52,65 @@ function closeSideBar() {
   sideBar.style.right = "-200px";
 }
 
+function openWidget() {
+  const modal = document.getElementById('widgetModal');
+  const iframe = document.getElementById('widgetFrame');
+  
+  iframe.src = iframe.src;
+  
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+  
+  setTimeout(() => {
+    document.getElementById('closeWidgetBtn').focus();
+  }, 100);
+}
+
+function closeWidget() {
+  const modal = document.getElementById('widgetModal');
+  const iframe = document.getElementById('widgetFrame');
+  
+  if (iframe.contentWindow && iframe.contentWindow.app && iframe.contentWindow.app.cleanup) {
+    try {
+      iframe.contentWindow.app.cleanup();
+    } catch(e) {
+      console.log('Виджет закрыт');
+    }
+  }
+  
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto';
+  document.documentElement.style.overflow = 'auto';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const openBtn = document.getElementById('openWidgetBtn');
+  const closeBtn = document.getElementById('closeWidgetBtn');
+  const modal = document.getElementById('widgetModal');
+  
+  if (openBtn) {
+    openBtn.addEventListener('click', openWidget);
+  }
+  
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeWidget);
+  }
+  
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeWidget();
+      }
+    });
+  }
+  
+  // Закрытие по клавише ESC
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+      closeWidget();
+    }
+  });
+});
+
 const data = {title: "Hello", body: "World", userId: 1}

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Умная банка | Виджет</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles-widget.css">
+</head>
+<body>
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <h2>Регистрация</h2>
+            <div class="alert" id="registerAlert"></div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Имя:</label>
+                    <input type="text" id="registerName" placeholder="Введите ваше имя" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email:</label>
+                    <input type="email" id="registerEmail" placeholder="example@mail.ru" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль:</label>
+                    <input type="password" id="registerPassword" placeholder="Не менее 6 символов" required minlength="6">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="modal-btn secondary" id="cancelRegister">Отмена</button>
+                    <button type="submit" class="modal-btn primary">Зарегистрироваться</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <h2>Вход в систему</h2>
+            <div class="alert" id="loginAlert"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" placeholder="example@mail.ru" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль:</label>
+                    <input type="password" id="loginPassword" placeholder="Введите ваш пароль" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="modal-btn secondary" id="cancelLogin">Отмена</button>
+                    <button type="submit" class="modal-btn primary">Войти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="calibrateModal">
+        <div class="modal">
+            <h2>Калибровка банки</h2>
+            <div class="alert" id="calibrateAlert"></div>
+            <div id="calibrationSteps">
+                <div class="calibration-step" id="step1">
+                    <div>
+                        <strong>Шаг 1:</strong> Убедитесь, что банка пуста
+                    </div>
+                    <button class="btn calibrate-btn" onclick="app.startCalibration(1)">Начать</button>
+                </div>
+                <div class="calibration-step" id="step2">
+                    <div>
+                        <strong>Шаг 2:</strong> Заполните банку наполовину
+                    </div>
+                    <button class="btn calibrate-btn" onclick="app.startCalibration(2)" disabled>Начать</button>
+                </div>
+                <div class="calibration-step" id="step3">
+                    <div>
+                        <strong>Шаг 3:</strong> Заполните банку полностью
+                    </div>
+                    <button class="btn calibrate-btn" onclick="app.startCalibration(3)" disabled>Начать</button>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn secondary" id="cancelCalibrate">Отмена</button>
+                <button type="button" class="modal-btn primary" id="saveCalibration" disabled>Сохранить калибровку</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="header-info">
+<h1>Умная банка</h1>
+            <p class="subtitle">Датчик уровня заполнения HC-SR04 + Arduino</p>
+        </div>
+        
+        <div class="auth-section">
+            <div class="user-info" id="userInfo" style="display: none;">
+                <div class="avatar" id="userAvatar">И</div>
+                <div>
+                    <div id="userName">Иван</div>
+                    <div style="font-size: 0.8rem; color: #95a5a6;" id="userEmail">ivan@mail.ru</div>
+                </div>
+                <button class="logout-btn" id="logoutBtn">Выйти</button>
+            </div>
+            
+            <div class="auth-buttons" id="authButtons">
+                <button class="auth-btn login-btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Войти
+                </button>
+                <button class="auth-btn register-btn" id="registerBtn">
+                    <i class="fas fa-user-plus"></i> Регистрация
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="status" id="status">Не подключено</div>
+        
+        <div class="measurement-status">
+            Обновление каждые 6 секунд 
+            <span class="update-indicator" id="updateIndicator"></span>
+        </div>
+        
+        <div class="jar-widget">
+            <div class="jar">
+                <div class="jar-top"></div>
+                <div class="jar-glass">
+                    <div class="jar-fill" id="jarFill"></div>
+                    <div class="jar-label">КРУПА</div>
+                </div>
+                <div class="jar-bottom"></div>
+            </div>
+            
+            <div class="jar-info">
+                <div class="distance">
+                    <div class="value" id="distanceValue">—</div>
+                    <div class="unit">см до крупы</div>
+                </div>
+                
+                <div class="level">
+                    <div class="value" id="levelValue">—</div>
+                    <div class="unit">% заполнения</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="connectBtn" class="btn connect">Подключить Arduino</button>
+            <button id="disconnectBtn" class="btn disconnect" disabled>Отключить</button>
+            <button id="calibrateBtn" class="btn calibrate-btn">Калибровать</button>
+        </div>
+        
+        <div class="info">
+            <p>Высота банки: <span id="jarHeight">30</span> см</p>
+            <p>Следующее обновление: через <span id="countdown">6</span> сек</p>
+            <p>Последнее обновление: <span id="timestamp">—</span></p>
+        </div>
+
+        <div class="calibration-section" id="calibrationSection" style="display: none;">
+            <h3><i class="fas fa-ruler-combined"></i> Данные калибровки</h3>
+            <div class="calibration-values">
+                <div class="calibration-value">
+                    <div class="label">Пустая банка</div>
+                    <div class="value" id="calEmpty">— см</div>
+                </div>
+                <div class="calibration-value">
+                    <div class="label">Наполовину</div>
+                    <div class="value" id="calHalf">— см</div>
+                </div>
+                <div class="calibration-value">
+                    <div class="label">Полная банка</div>
+                    <div class="value" id="calFull">— см</div>
+                </div>
+                <div class="calibration-value">
+                    <div class="label">Высота банки</div>
+                    <div class="value" id="calHeight">— см</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-section" id="historySection" style="display: none;">
+            <h3><i class="fas fa-history"></i> История измерений</h3>
+            <div class="history-list" id="historyList">
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

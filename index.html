@@ -184,6 +184,16 @@
           Отправить
         </button>
       </section>
+      <section id="widget-section">
+        <h1>Попробуйте наш виджет</h1>
+        <p class="contact-description">
+          Протестируйте умную банку в действии! 
+          Подключите датчик HC-SR04 к Arduino и следите за уровнем заполнения в реальном времени.
+        </p>
+        <button id="openWidgetBtn" class="form-btn" style="margin-top: 30px;">
+          Запустить виджет
+        </button>
+      </section>
     </main>
     <footer>
       <div class="footer-content">
@@ -198,7 +208,13 @@
         </div>
       </div>
     </footer>
+    <div id="widgetModal" class="modal-overlay">
+      <div class="modal-content">
+        <button id="closeWidgetBtn" class="close-btn">×</button>
+        <iframe id="widgetFrame" src="widget.html" frameborder="0"></iframe>
+      </div>
+    </div>
   </body>
-
   <script src="main.js"></script>
 </html>
+.
